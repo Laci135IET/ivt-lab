@@ -46,8 +46,6 @@ public class GT4500Test {
         verify(pts, never()).fire(any(Integer.class));
       }
     }
-
-
   }
 
   @Test
@@ -64,14 +62,84 @@ public class GT4500Test {
   }
 
   @Test
-  public void consecutiveFiring() {
+  public void consecutiveAllFiring() {
 
     boolean result = ship.fireTorpedo(FiringMode.ALL);
+    when(pts.isEmpty()).thenReturn(true);
+    when(sts.isEmpty()).thenReturn(true);
+
     assertEquals(true, result);
+    verify(pts,times(1)).fire(any(Integer.class));
+    verify(sts,times(1)).fire(any(Integer.class));
+
     result = ship.fireTorpedo(FiringMode.ALL);
     assertEquals(false, result);
     verify(pts,times(1)).fire(any(Integer.class));
     verify(sts,times(1)).fire(any(Integer.class));
   }
+
+  @Test
+  public void consecutiveSingleFiring() {
+
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    when(pts.isEmpty()).thenReturn(true);
+
+    assertEquals(true, result);
+    verify(pts,times(1)).fire(any(Integer.class));
+    verify(sts,never()).fire(any(Integer.class));
+    result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(true, result);
+    verify(pts,times(1)).fire(any(Integer.class));
+    verify(sts,times(1)).fire(any(Integer.class));
+  }
+
+  @Test
+  public void switchOnEmptyStore() {
+    when(pts.isEmpty()).thenReturn(true);
+
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(true, result);
+    verify(pts,never()).fire(any(Integer.class));
+    verify(sts,times(1)).fire(any(Integer.class));
+
+  }
+
+  @Test
+  public void dontSwitchOnFaultyStore() {
+    when(pts.fire(any(Integer.class))).thenReturn(false);
+
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    assertEquals(false, result);
+
+    verify(sts,never()).fire(any(Integer.class));
+
+  }
+
+  @Test
+  public void singleAllFire() {
+
+    boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    when(pts.isEmpty()).thenReturn(true);
+
+    assertEquals(true, result);
+    verify(pts,times(1)).fire(any(Integer.class));
+    verify(sts,never()).fire(any(Integer.class));
+    result = ship.fireTorpedo(FiringMode.ALL);
+    assertEquals(false, result);
+    verify(pts,times(1)).fire(any(Integer.class));
+    verify(sts,times(1)).fire(any(Integer.class));
+
+  }
+
+  /* New test: firing should fail if null is passed as firing mode. */
+
+  @Test
+  public void invalidFiringMode() {
+
+    boolean result = ship.fireTorpedo(null);
+
+    assertEquals(false, result);
+  }
+
 
 }
