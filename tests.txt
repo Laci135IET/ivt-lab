@@ -1,0 +1,43 @@
+Already existing tests:
+ - Firing a single torpedo storage must be successful.
+ - Firing both torpedo storages must be successful and both storages should actually be fired.
+
+New tests:
+ - Firing both storages consecutively should result in a successful and a failed firing attempt. Both torpedo storage should be fired only once, during the first firing attempt.
+  - Fire both storages.
+  - Assert that the first firing was successful.
+  - Assert that both storages were fired exactly once.
+  - Fire both storages.
+  - Assert that the 2nd firing failed.
+  - Assert that the storages were fired exactly once.
+
+ - Fire in single mode twice in a row. Both torpedo storages should fire only once.
+  - Fire in single mode.
+  - Assert that the firing succeeded.
+  - Assert that exactly one storage was fired exactly once, and the other one was not.
+  - Fire in single mode.
+  - Assert that the firing succeeded.
+  - Assert that both storages were fired exactly once.
+
+ - If the next store in line is empty when firing in single mode, the other store shou be fired.
+  - The primary store should be fired, yet it is empty and the secondary torpedo store is full.
+  - Fire in single mode.
+  - Assert that the firing succeeded.
+  - Assert that the primary store was not fired.
+  - Assert that the secondary store was fired exactly once.
+
+ - Ship should not try to fire the other store if store reports a failure in single mode.
+  - The primary store was fired last, yet it is full and the secondary torpedo store is empty, also faulty.
+  - Fire in single mode.
+  - Assert that the firing failed.
+  - Assert that the primary store was not fired.
+  - Assert that the secondary store was not fired.
+
+ - Fire in single mode and in all mode afterwards. The first and afterwards only the second torpedo should fire. 
+  - Fire in single mode.
+  - Assert that the firing was successful.
+  - Assert that the first store was fired.
+  - Assert that the second store was not fired.
+  - Fire in all mode.
+  - Assert both stores were fired exactly once.
+  - Assert that the firing failed.
